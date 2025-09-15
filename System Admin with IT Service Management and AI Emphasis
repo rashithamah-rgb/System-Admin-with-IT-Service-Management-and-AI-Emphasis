@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Enum for ticket status
+enum TicketStatus {
+    OPEN, IN_PROGRESS, RESOLVED, CLOSED
+}
+
+// Ticket class
+class Ticket {
+    private int id;
+    private String title;
+    private String description;
+    private TicketStatus status;
+    private String priority;
+
+    public Ticket(int id, String title, String description, String priority) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = TicketStatus.OPEN;
+        this.priority = priority;
+    }
+
+    // Getters and setters
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public TicketStatus getStatus() { return status; }
+    public void setStatus(TicketStatus status) { this.status = status; }
+    public String getPriority() { return priority; }
+
+    @Override
+    public String toString() {
+        return "Ticket ID: " + id + "\nTitle: " + title + "\nStatus: " + status + "\nPriority: " + priority + "\nDescription: " + description;
+    }
+}
+
+// AI-assisted suggestion for ticket priority
+class AISuggestion {
+    public static String suggestPriority(String description) {
+        // Simple keyword-based AI suggestion logic
+        if (description.toLowerCase().contains("critical") || description.toLowerCase().contains("downtime")) {
+            return "High";
+        } else if (description.toLowerCase().contains("issue") || description.toLowerCase().contains("problem")) {
+            return "Medium";
+        } else {
+            return "Low";
+        }
+    }
+}
+
+// IT Service Management system
+public class ITServiceManagement {
+    private List<Ticket> tickets;
+    private int ticketCounter;
+    private Scanner scanner;
+
+    public ITServiceManagement() {
+        this.tickets = new ArrayList<>();
+        this.ticketCounter = 1;
+        this.scanner = new Scanner(System.in);
+    }
+
+    // Create ticket with AI-suggested priority
+    public void createTicket() {
+        System.out.print("Enter ticket title: ");
+        String title = scanner.nextLine();
+        System.out.print("Enter ticket description: ");
+        String description = scanner.nextLine();
+        String suggestedPriority = AISuggestion.suggestPriority(description);
+        System.out.println("AI suggested priority: " + suggestedPriority);
+        System.out.print("Confirm priority (High/Medium/Low) or enter custom: ");
+        String priority = scanner.nextLine();
+        Ticket ticket = new Ticket(ticketCounter++, title, description, priority);
+        tickets.add(ticket);
+        System.out.println("Ticket created with ID: " + ticket.getId());
+    }
+
+    // View ticket
+    public void viewTicket(int id) {
+        for (Ticket ticket : tickets) {
+            if (ticket.getId() == id) {
+                System.out.println(ticket);
+                return;
+            }
+        }
+        System.out.println("Ticket not found
